@@ -1,0 +1,333 @@
+Query Type,Query,RAG_Answer,Pure_LLM_Answer,Simple_IR_Preview,Latency_Seconds,Score,Notes
+existing,How does the Boolean retrieval model work?,"The Boolean retrieval model works by allowing users to ask queries that are Boolean expressions, using operators such as AND, OR, and NOT to join query terms. It views each document as a set of words and is precise, meaning a document either matches the query condition or it does not. This model is based on exact match, where documents are either relevant or not, with no ranking of relevance [Source: lecture1-intro.pptx].","The Boolean retrieval model is a simple and intuitive model used in information retrieval systems, particularly in search engines and databases. It's based on Boolean algebra, which uses logical operators to combine search terms and retrieve relevant documents. Here's how it works:
+
+**Basic Principles:**
+
+1. **Indexing**: The system creates an index of all the documents in the collection, where each document is represented by a set of keywords or terms.
+2. **Query**: The user submits a query, which is a Boolean expression consisting of search terms connected by logical operators (AND, OR, NOT).
+3. **Matching**: The system matches the query against the index to retrieve documents that satisfy the Boolean expression.
+
+**Boolean Operators:**
+
+The Boolean retrieval model uses three basic logical operators:
+
+1. **AND** (Conjunction): Retrieves documents that contain both terms. Example: `apple AND banana` returns documents that contain both ""apple"" and ""banana"".
+2. **OR** (Disjunction): Retrieves documents that contain either term. Example: `apple OR banana` returns documents that contain either ""apple"" or ""banana"".
+3. **NOT** (Negation): Retrieves documents that do not contain the term. Example: `NOT banana` returns documents that do not contain ""banana"".
+
+**Query Evaluation:**
+
+When a user submits a query, the system evaluates the Boolean expression as follows:
+
+1. **Term extraction**: The system extracts the individual terms from the query.
+2. **Index lookup**: For each term, the system looks up the corresponding documents in the index.
+3. **Operator application**: The system applies the Boolean operators to the sets of documents retrieved for each term.
+4. **Result set**: The final result set consists of documents that satisfy the entire Boolean expression.
+
+**Example:**
+
+Suppose we have a collection of documents with the following keywords:
+
+| Document | Keywords |
+| --- | --- |
+| Doc1 | apple, banana, orange |
+| Doc2 | apple, orange |
+| Doc3 | banana, grape |
+
+If we submit the query `apple AND banana`, the system will:
+
+1. Extract the terms: `apple` and `banana`.
+2. Look up the index: `apple` -> {Doc1, Doc2}, `banana` -> {Doc1, Doc3}.
+3. Apply the AND operator: {Doc1, Doc2} ∩ {Doc1, Doc3} = {Doc1}.
+4. Return the result set: {Doc1}.
+
+The Boolean retrieval model is simple and efficient, but it has some limitations, such as:
+
+* It does not consider the importance or relevance of the terms.
+* It does not handle synonyms or related terms.
+* It can be sensitive to the order of the terms in the query.
+
+Despite these limitations, the Boolean retrieval model is still widely used in many search engines and databases, often in combination with other retrieval models, such as vector space models or probabilistic models.","[Top Match: lecture1-intro.pptx] Title: Boolean queries: Exact match
+Content: The Boolean retrieval model is being able to ask a query that is a Boolean expression: Boolean Queries are queries using AND, OR and NOT to join query terms Views each document as a set of words Is precise: document matches condition or not. Perhaps the simplest model to build an IR system on Primary commercial retrieval tool for 3 decades. Many search systems you still use are Boolean: Email, library catalog, Mac OS X Spotlight | 30 | Sec. 1.3...",1.02,1.0,Success (Answered + Cited)
+existing,What is the difference between stemming and lemmatization?,"The context provided does not explicitly explain the difference between stemming and lemmatization. However, it does mention both terms in separate sections. 
+
+Stemming is described as reducing terms to their ""roots"" before indexing, suggesting a crude affix chopping approach that is language-dependent [Source: lecture2-dictionary.pptx]. On the other hand, lemmatization is mentioned as ""Full morphological analysis"" in the context of other stemmers, such as the Snowball stemmer [Source: lecture2-dictionary.pptx].
+
+While the context does not provide a direct comparison between the two, it implies that lemmatization involves a more detailed analysis of word morphology compared to the simpler affix removal approach of stemming. 
+
+Therefore, based on the information given, the difference between stemming and lemmatization appears to be the level of complexity and analysis involved in reducing words to their base form, with lemmatization being a more comprehensive approach [Source: lecture2-dictionary.pptx].","Stemming and lemmatization are both techniques used in natural language processing (NLP) to reduce words to their base or root form, but they differ in their approach and outcome.
+
+**Stemming:**
+
+Stemming is a simple, rule-based approach that involves removing the suffixes from words to obtain their stem. The goal is to reduce words to a common base form, without necessarily producing a valid word. Stemming algorithms, such as Porter Stemmer, use a set of predefined rules to remove suffixes, like -ed, -ing, -ly, etc.
+
+Example:
+- Running → Run
+- Happiness → Happi
+
+As you can see, stemming can sometimes result in words that are not valid or recognizable.
+
+**Lemmatization:**
+
+Lemmatization, on the other hand, is a more sophisticated approach that uses a dictionary or a lexical database to reduce words to their base or root form, known as the lemma. Lemmatization takes into account the context and the part of speech (POS) of the word to determine its base form.
+
+Example:
+- Running → Run
+- Happiness → Happy
+- Better → Good (because ""better"" is a comparative form of ""good"")
+
+Lemmatization produces a valid word, which is often the base form of the word, and it's more accurate than stemming.
+
+**Key differences:**
+
+1. **Accuracy**: Lemmatization is generally more accurate than stemming, as it uses a dictionary or lexical database to determine the base form of a word.
+2. **Output**: Stemming can produce invalid or unrecognizable words, while lemmatization produces a valid word.
+3. **Approach**: Stemming uses simple, rule-based approaches, while lemmatization uses a more sophisticated, dictionary-based approach.
+4. **Context**: Lemmatization takes into account the context and POS of the word, while stemming does not.
+
+In summary, while both stemming and lemmatization aim to reduce words to their base form, lemmatization is a more accurate and sophisticated approach that produces valid words, whereas stemming is a simpler, rule-based approach that may produce invalid words.","[Top Match: lecture2-dictionary.pptx] Title: Porter’s algorithm
+Content: Commonest algorithm for stemming English Results suggest it’s at least as good as other stemming options Conventions + 5 phases of reductions phases applied sequentially each phase consists of a set of commands sample convention: Of the rules in a compound command, select the one that applies to the longest suffix. | Sec. 2.2.4...",0.85,1.0,Success (Answered + Cited)
+existing,How do k-gram indexes help with wildcard queries?,"K-gram indexes help with wildcard queries by allowing the retrieval of terms that match any of the query's n-grams. This is done by enumerating all the n-grams in the query string and using the n-gram index to retrieve all lexicon terms that match any of the query n-grams. The retrieved terms can then be filtered based on the number of matching n-grams. [Source: lecture3-tolerant-retrieval.pptx, Sec. 3.3.4]","K-gram indexes are a type of indexing technique used in databases and search systems to support efficient querying, particularly for wildcard queries. A k-gram is a sequence of k items (e.g., characters) from a string. By indexing all possible k-grams of a string, a database can quickly locate strings that match a query with wildcards.
+
+Here's how k-gram indexes help with wildcard queries:
+
+1. **Preprocessing**: When a string is inserted into the database, it is broken down into all possible k-grams. For example, if the string is ""hello"" and k=3, the k-grams would be ""hel"", ""ell"", and ""llo"".
+2. **Indexing**: Each k-gram is stored in an index, along with a reference to the original string. This creates a mapping between k-grams and the strings that contain them.
+3. **Querying**: When a wildcard query is executed, the query is broken down into k-grams. For example, if the query is ""h*llo"", the k-grams would be ""hel"" and ""llo"".
+4. **Lookup**: The database looks up the k-grams from the query in the index. If a match is found, the database can quickly retrieve the corresponding strings.
+5. **Verification**: The database verifies that the retrieved strings match the original query, including the wildcard characters.
+
+K-gram indexes provide several benefits for wildcard queries:
+
+* **Efficient lookup**: K-gram indexes allow for fast lookup of strings that match a query, even with wildcards.
+* **Reduced search space**: By indexing k-grams, the database can quickly eliminate strings that do not match the query, reducing the search space.
+* **Improved query performance**: K-gram indexes can significantly improve the performance of wildcard queries, making them more efficient and scalable.
+
+However, k-gram indexes also have some limitations and trade-offs:
+
+* **Index size**: K-gram indexes can be large, as they store all possible k-grams of a string.
+* **Insertion and update overhead**: Inserting or updating a string in the database can be slow, as the k-gram index needs to be updated.
+* **Query complexity**: K-gram indexes are optimized for simple wildcard queries. More complex queries, such as regular expressions, may not be supported or may require additional processing.
+
+Overall, k-gram indexes are a useful technique for supporting efficient wildcard queries in databases and search systems. However, they require careful consideration of the trade-offs and limitations to ensure optimal performance and scalability.","[Top Match: lecture3-tolerant-retrieval.pptx] Title: Processing wild-card queries
+Content: As before, we must execute a Boolean query for each enumerated, filtered term. Wild-cards can result in expensive query execution (very large disjunctions…) pyth* AND prog* If you encourage “laziness” people will respond! Which web search engines allow wildcard queries? | Search | Type your search terms, use ‘*’ if you need to. E.g., Alex* will match Alexander. | Sec. 3.2.2 | 20...",0.62,1.0,Success (Answered + Cited)
+existing,Explain the formula for TF-IDF.,"The formula for TF-IDF is not explicitly stated in the provided context. However, it is mentioned that the tf-idf weight of a term is the product of its tf weight and its idf weight [Source: lecture7-vectorspace.pptx] and [Source: lecture6-tfidf.pptx]. 
+
+The idf weight is defined as log (N/dft), where N is the total number of documents and dft is the document frequency of term t [Source: lecture6-tfidf.pptx]. 
+
+Therefore, the TF-IDF formula can be inferred as: TF-IDF = TF * log (N/dft), where TF is the term frequency.","TF-IDF (Term Frequency-Inverse Document Frequency) is a statistical method used to evaluate the importance of words in a document based on their frequency and rarity across a collection of documents. The formula for TF-IDF is:
+
+TF-IDF = TF * IDF
+
+Where:
+
+1. **TF (Term Frequency)**: This measures the frequency of a word in a document. It's calculated as:
+
+   TF = (Number of times the word appears in the document) / (Total number of words in the document)
+
+   For example, if a document contains 100 words and the word ""example"" appears 5 times, the TF for ""example"" would be 5/100 = 0.05.
+
+2. **IDF (Inverse Document Frequency)**: This measures the rarity of a word across a collection of documents. It's calculated as:
+
+   IDF = log((Total number of documents in the collection) / (Number of documents containing the word))
+
+   For example, if there are 1000 documents in the collection and the word ""example"" appears in 10 documents, the IDF for ""example"" would be log(1000/10) = log(100) ≈ 2.
+
+So, the TF-IDF formula combines these two values:
+
+TF-IDF = (Number of times the word appears in the document) / (Total number of words in the document) * log((Total number of documents in the collection) / (Number of documents containing the word))
+
+This formula helps to:
+
+* Downweight common words like ""the"", ""and"", etc. that appear frequently in many documents (low IDF)
+* Upweight rare words that are specific to a particular document or topic (high IDF)
+
+By multiplying TF and IDF, TF-IDF provides a score that reflects the importance of a word in a document, taking into account both its local frequency and its global rarity.","[Top Match: lecture6-tfidf.pptx] Title: tf-idf weighting has many variants
+Content: Columns headed ‘n’ are acronyms for weight schemes. | Why is the base of the log in idf immaterial? | Sec. 6.4
+Notes: n default is just term frequency ltc is best known form of weighting...",0.63,1.0,Success (Answered + Cited)
+existing,How is cosine similarity calculated?,"For length-normalized vectors, cosine similarity is calculated as the dot product (or scalar product) of the vectors. This is equivalent to the cosine of the angle between the two vectors. [Source: lecture6-tfidf.pptx, lecture7-vectorspace.pptx]","Cosine similarity is a measure of similarity between two vectors, often used in text analysis, information retrieval, and machine learning. It's calculated as the dot product of two vectors divided by the product of their magnitudes.
+
+Given two vectors A and B, the cosine similarity is calculated as:
+
+cosine similarity = (A · B) / (|A| * |B|)
+
+where:
+- A · B is the dot product of vectors A and B
+- |A| and |B| are the magnitudes (or lengths) of vectors A and B, respectively
+
+The dot product A · B is calculated as:
+
+A · B = Σ(a_i * b_i)
+
+where a_i and b_i are the i-th elements of vectors A and B, respectively.
+
+The magnitude of a vector is calculated as:
+
+|A| = √(Σ(a_i^2))
+
+where a_i are the elements of vector A.
+
+The cosine similarity ranges from -1 (completely dissimilar) to 1 (completely similar). A value of 0 indicates that the vectors are orthogonal (perpendicular) to each other.
+
+Here's a step-by-step example:
+
+Suppose we have two vectors:
+A = [1, 2, 3]
+B = [4, 5, 6]
+
+1. Calculate the dot product:
+A · B = (1*4) + (2*5) + (3*6) = 4 + 10 + 18 = 32
+
+2. Calculate the magnitudes:
+|A| = √(1^2 + 2^2 + 3^2) = √(1 + 4 + 9) = √14
+|B| = √(4^2 + 5^2 + 6^2) = √(16 + 25 + 36) = √77
+
+3. Calculate the cosine similarity:
+cosine similarity = (A · B) / (|A| * |B|) = 32 / (√14 * √77) ≈ 0.974
+
+This means that vectors A and B are very similar, with a cosine similarity of approximately 0.974.","[Top Match: lecture6-tfidf.pptx] Title: Cosine for length-normalized vectors
+Content: For length-normalized vectors, cosine similarity is simply the dot product (or scalar product): for q, d length-normalized. | 36...",0.38,1.0,Success (Answered + Cited)
+existing,What are the main limitations of LLMs that RAG helps to solve?,I cannot answer this question as it is not covered in the course materials.,"RAG (Retrieval-Augmented Generation) is a technique designed to address some of the main limitations of Large Language Models (LLMs). The primary limitations that RAG helps to solve are:
+
+1. **Lack of external knowledge**: LLMs are typically trained on a fixed dataset and may not have access to the latest information or knowledge outside of their training data. RAG allows the model to retrieve information from external sources, such as databases or the internet, to augment its knowledge and generate more accurate and up-to-date responses.
+2. **Limited context window**: LLMs have a limited context window, which means they can only consider a certain amount of text when generating a response. RAG enables the model to retrieve and consider a larger context, including relevant documents or passages, to improve the accuracy and relevance of its responses.
+3. **Hallucinations and inaccuracies**: LLMs can sometimes generate responses that are not based on actual facts or may contain inaccuracies. RAG helps to mitigate this issue by allowing the model to retrieve and verify information from external sources, reducing the likelihood of hallucinations and inaccuracies.
+4. **Overfitting to training data**: LLMs can overfit to their training data, which means they may not generalize well to new, unseen data. RAG helps to reduce overfitting by providing the model with a more diverse range of information and allowing it to learn from external sources.
+5. **Lack of transparency and explainability**: LLMs can be difficult to interpret and understand, making it challenging to explain their decisions or responses. RAG provides more transparency and explainability by allowing the model to retrieve and provide relevant information, making it easier to understand the reasoning behind its responses.
+
+By addressing these limitations, RAG can improve the performance, accuracy, and reliability of LLMs, enabling them to generate more informative, accurate, and helpful responses.","[Top Match: RAG.pptx] Title: What is RAG
+Content: The technique of enhancing the parametric memory of an LLM by creating access to an explicit non-parametric memory, from which a retriever can fetch relevant information, augment that information to the prompt, pass the prompt to an LLM to enable the LLM to generate a response that is contextual, reliable, and factually accurate is called Retrieval Augmented Generation...",0.24,0.0,False Negative (Refused valid question)
+existing,Describe the architecture of the Transformer model.,"The Transformer model is a sequence-to-sequence model, which consists of two main components: an encoder and a decoder [Source: LLMs.pptx]. The encoder takes in raw text, splits it into its core components, converts those components into vectors, and uses attention to understand the context of the text [Source: LLMs.pptx]. The decoder generates text by using a modified type of attention to predict the next best token [Source: LLMs.pptx]. Additionally, the Transformer has a learned word embeddings layer and utilizes positional encoding to provide information on the position of words in a sequence [Source: LLMs.pptx]. This architecture is also used in other models, such as the T5 model, which unifies all NLU and NLG tasks by converting them into text-to-text tasks [Source: LLMs.pptx].","The Transformer model is a type of neural network architecture introduced in the paper ""Attention Is All You Need"" by Vaswani et al. in 2017. It revolutionized the field of natural language processing (NLP) and has since been widely adopted in various applications. The Transformer architecture is primarily designed for sequence-to-sequence tasks, such as machine translation, text summarization, and chatbots.
+
+**Overview**
+
+The Transformer model consists of an encoder and a decoder. The encoder takes in a sequence of tokens (e.g., words or characters) and outputs a continuous representation of the input sequence. The decoder then generates an output sequence, one token at a time, based on the output of the encoder.
+
+**Encoder**
+
+The encoder is composed of a stack of identical layers, each consisting of two sub-layers:
+
+1. **Self-Attention Mechanism**: This sub-layer allows the model to attend to different parts of the input sequence simultaneously and weigh their importance. It consists of three linear layers:
+	* Query (Q): generates a query vector for each token in the input sequence.
+	* Key (K): generates a key vector for each token in the input sequence.
+	* Value (V): generates a value vector for each token in the input sequence.
+	The attention weights are computed by taking the dot product of Q and K, and then applying a softmax function. The output is a weighted sum of the value vectors.
+2. **Feed Forward Network (FFN)**: This sub-layer applies a position-wise fully connected feed-forward network to the output of the self-attention mechanism. It consists of two linear layers with a ReLU activation function in between.
+
+**Decoder**
+
+The decoder is also composed of a stack of identical layers, each consisting of three sub-layers:
+
+1. **Self-Attention Mechanism**: similar to the encoder's self-attention mechanism.
+2. **Encoder-Decoder Attention**: this sub-layer allows the decoder to attend to the output of the encoder. It is similar to the self-attention mechanism, but the query vector is generated from the decoder's output, and the key and value vectors are generated from the encoder's output.
+3. **Feed Forward Network (FFN)**: similar to the encoder's FFN.
+
+**Additional Components**
+
+* **Positional Encoding**: since the Transformer model does not use recurrent neural networks (RNNs) or convolutional neural networks (CNNs), it needs a way to preserve the order of the input sequence. Positional encoding is added to the input embeddings to encode the position of each token in the sequence.
+* **Layer Normalization**: applied after each sub-layer to normalize the output.
+* **Residual Connection**: applied after each sub-layer to help with training and prevent vanishing gradients.
+
+**Key Benefits**
+
+The Transformer architecture has several key benefits:
+
+* **Parallelization**: the self-attention mechanism allows for parallelization of the computation across the input sequence, making it much faster than RNNs.
+* **Scalability**: the Transformer model can handle long-range dependencies and is scalable to large input sequences.
+* **Flexibility**: the Transformer model can be used for a wide range of NLP tasks, including machine translation, text summarization, and chatbots.
+
+Overall, the Transformer architecture has revolutionized the field of NLP and has become a standard component in many state-of-the-art models.","[Top Match: LLMs.pptx] Title: Transformer Family Tree
+Content: Over time, each of the three main architectures has undergone an evolution of its own (both the architecture itself and the pre-training methods....",0.72,1.0,Success (Answered + Cited)
+missing,How does Latent Dirichlet Allocation (LDA) model topics?,I cannot answer this question as it is not covered in the course materials.,"Latent Dirichlet Allocation (LDA) is a generative model used for topic modeling, which is a type of natural language processing (NLP) technique. It models topics in a corpus of text by representing each document as a mixture of topics, where each topic is a distribution over words.
+
+Here's a high-level overview of how LDA models topics:
+
+**Assumptions:**
+
+1. **Documents are mixtures of topics**: Each document is represented as a mixture of topics, where each topic is a distribution over words.
+2. **Topics are distributions over words**: Each topic is a probability distribution over the vocabulary of words, where each word has a certain probability of being associated with that topic.
+3. **Words are generated from topics**: Each word in a document is generated from one of the topics in the document's topic mixture.
+
+**LDA Model:**
+
+The LDA model consists of the following components:
+
+1. **Document-topic distribution (θ)**: A probability distribution over topics for each document, represented as a vector of length K, where K is the number of topics.
+2. **Topic-word distribution (φ)**: A probability distribution over words for each topic, represented as a matrix of size K x V, where V is the vocabulary size.
+3. **Word assignments (z)**: A vector of length N, where N is the number of words in the document, indicating which topic each word is assigned to.
+
+**Generative Process:**
+
+The LDA model generates documents according to the following process:
+
+1. For each document, sample a document-topic distribution (θ) from a Dirichlet distribution.
+2. For each word in the document, sample a topic assignment (z) from the document-topic distribution (θ).
+3. Sample a word from the topic-word distribution (φ) corresponding to the assigned topic (z).
+
+**Inference:**
+
+Given a corpus of documents, the goal of LDA is to infer the topic assignments (z) and the document-topic distribution (θ) and topic-word distribution (φ) that are most likely to have generated the observed words. This is typically done using variational inference or Gibbs sampling.
+
+**Key Parameters:**
+
+1. **Number of topics (K)**: The number of topics to model.
+2. **Alpha (α)**: The hyperparameter controlling the document-topic distribution.
+3. **Beta (β)**: The hyperparameter controlling the topic-word distribution.
+
+**Advantages:**
+
+1. **Flexibility**: LDA can model complex topic structures and relationships between topics.
+2. **Interpretability**: The resulting topics can be interpreted as meaningful themes or concepts in the data.
+3. **Scalability**: LDA can be applied to large corpora of text data.
+
+**Common Applications:**
+
+1. **Text classification**: LDA can be used for text classification tasks, such as spam detection or sentiment analysis.
+2. **Topic modeling**: LDA can be used to discover underlying topics in a corpus of text data.
+3. **Information retrieval**: LDA can be used to improve search engine results by modeling the topics and themes in a corpus of text data.","[Top Match: lecture7-vectorspace.pptx] Title: This lecture
+Content: Speeding up vector space ranking Putting together a complete search system Will require learning about a number of miscellaneous topics and heuristics | Ch. 7...",0.24,1.0,Success (Correctly Refused)
+missing,Explain the HITS algorithm for web search.,I cannot answer this question as it is not covered in the course materials.,"The HITS (Hyperlink-Induced Topic Search) algorithm is a link analysis algorithm used for web search and information retrieval. It was developed by Jon Kleinberg in 1998. The primary goal of HITS is to identify authoritative and hub pages on the web.
+
+**Key Concepts:**
+
+1. **Authority Pages**: These are pages that are considered experts or authorities on a particular topic. They contain high-quality, relevant, and useful content.
+2. **Hub Pages**: These are pages that link to many authority pages, providing a collection of links to relevant and useful resources.
+
+**How HITS Works:**
+
+The HITS algorithm works as follows:
+
+1. **Initial Seed Set**: A set of pages is selected as the initial seed set, which is typically obtained through a keyword search or other means.
+2. **Link Graph Construction**: A link graph is constructed by crawling the web and collecting links between pages. The graph represents the web as a network of nodes (pages) and edges (links).
+3. **Authority Score Calculation**: For each page, an authority score is calculated based on the number and quality of links pointing to it. The authority score represents the page's reputation or importance.
+4. **Hub Score Calculation**: For each page, a hub score is calculated based on the number and quality of links pointing out from it. The hub score represents the page's ability to connect users to relevant resources.
+5. **Iteration**: The authority and hub scores are updated iteratively, with each page's score influencing the scores of its neighbors. This process continues until convergence or a stopping criterion is reached.
+6. **Ranking**: The final authority and hub scores are used to rank pages in response to a search query. Authority pages are ranked higher for their relevance and expertise, while hub pages are ranked higher for their ability to connect users to relevant resources.
+
+**Mathematical Formulation:**
+
+The HITS algorithm can be mathematically formulated as follows:
+
+Let `A` be the authority score vector and `H` be the hub score vector. The update rules for `A` and `H` are:
+
+`A = (L * H) / ||L * H||`
+`H = (L^T * A) / ||L^T * A||`
+
+where `L` is the link matrix, `L^T` is its transpose, and `||.||` denotes the Euclidean norm.
+
+**Advantages and Limitations:**
+
+Advantages:
+
+* HITS can identify high-quality, authoritative pages and hubs that are relevant to a search query.
+* It can handle large-scale web graphs and is relatively efficient.
+
+Limitations:
+
+* HITS assumes that links are a good indicator of authority and relevance, which may not always be the case.
+* It can be sensitive to link spam and manipulation.
+* The algorithm can be computationally expensive for very large web graphs.
+
+Overall, the HITS algorithm is a powerful tool for web search and information retrieval, but it has its limitations and requires careful tuning and evaluation to achieve optimal results.",[Top Match: lecture7-vectorspace.pptx] Content: CS276 Information Retrieval and Web Search Pandu Nayak and Prabhakar Raghavan Lecture 7: Scoring and results assembly...,0.31,1.0,Success (Correctly Refused)
+general,What is the capital of France?,I cannot answer this question as it is not covered in the course materials.,The capital of France is Paris.,"[Top Match: lecture2-dictionary.pptx] Title: Tokenization: language issues
+Content: Arabic (or Hebrew) is basically written right to left, but with certain items like numbers written left to right Words are separated, but letter forms within a word form complex ligatures ← → ← → ← start ‘Algeria achieved its independence in 1962 after 132 years of French occupation.’ With Unicode, the surface presentation is complex, but the stored form is straightforward | Sec. 2.2.1...",0.24,1.0,Success (Correctly Refused)

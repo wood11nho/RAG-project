@@ -1,0 +1,11 @@
+langchain 
+langchain-groq 
+langchain-community
+langchain-huggingface 
+chromadb 
+rank_bm25 
+python-pptx 
+python-dotenv 
+unstructured 
+networkx 
+scikit-learn

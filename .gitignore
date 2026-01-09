@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ChromaDB
+chroma_db/
+
+# Dataset and results
+data/
+/final_benchmark_results.csv
+
+# view_results.py
+view_results.py
