@@ -14,7 +14,7 @@ This project implements a **Hybrid Search** architecture to ensure maximum retri
 2.  **Retrieval Strategy (Ensemble):**
     * **Semantic Search (ChromaDB):** Uses `all-MiniLM-L6-v2` embeddings to find conceptually similar content.
     * **Keyword Search (BM25):** Uses sparse vector retrieval to catch specific terminology (e.g., "TF-IDF formula").
-    * **Weighting:** 50/50 weighted ensemble for balanced results.
+    * **Weighting:** **40% Keyword / 60% Semantic** weighted ensemble for balanced results.
 3.  **Generation:** Passes retrieved context to **Llama 3.3 (70B Versatile)** via Groq for high-speed, grounded inference.
 
 ---
@@ -83,7 +83,7 @@ Generate the comparison report (RAG vs. LLM vs. Simple IR):
 ```bash
 python benchmark.py
 ```
-This produces `final_benchmark_results.csv` containing the 10 test queries.
+This produces `benchmark_results.csv` containing the 10 test queries.
 
 ## 📊 Evaluation & Results
 Evaluated against three criteria (see `benchmark_results.csv` for full details):
